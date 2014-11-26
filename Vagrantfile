@@ -1,5 +1,4 @@
 require 'vagrant-openstack-provider'
-require 'Base64'
 
 Vagrant.configure('2') do |config|
 
