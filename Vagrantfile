@@ -1,10 +1,6 @@
 require 'vagrant-openstack-provider'
-require 'Base64'
 
 Vagrant.configure('2') do |config|
-
-  config.vm.box       = 'dummy-openstack'
-  config.vm.box_url   = 'https://github.com/ggiamarchi/vagrant-openstack/raw/master/source/dummy.box'
 
   config.ssh.username = ENV['OS_SSH_USERNAME']
 
@@ -23,10 +19,13 @@ Vagrant.configure('2') do |config|
       instance.vm.provider :openstack do |os|
         os.server_name      = "coreos-#{i}"
         os.floating_ip_pool = ENV['OS_FLOATING_IP_POOL']
-        os.user_data = Base64.encode64("manage-resolv-conf: true
+        os.user_data = "#cloud-config
 
-resolv_conf:
-  nameservers: ['8.8.4.4', '8.8.8.8']
+write_files:
+  - path: /etc/resolv.conf
+    content: |
+      nameserver 8.8.8.8
+      nameserver 8.8.4.4
 
 coreos:
   etcd:
@@ -38,7 +37,7 @@ coreos:
     - name: etcd.service
       command: start
     - name: fleet.service
-      command: start")
+      command: start"
       end
     end
   end
