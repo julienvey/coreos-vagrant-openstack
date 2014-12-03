@@ -2,6 +2,13 @@ require 'vagrant-openstack-provider'
 
 Vagrant.configure('2') do |config|
 
+  url = URI.parse('http://discovery.etcd.io/new')
+  req = Net::HTTP::Get.new(url.to_s)
+  res = Net::HTTP.start(url.host, url.port) {|http|
+    http.request(req)
+  }
+  etcd_discovery_url = res.body
+
   config.ssh.username = ENV['OS_SSH_USERNAME']
 
   config.vm.provider :openstack do |os|
@@ -29,7 +36,7 @@ write_files:
 
 coreos:
   etcd:
-    discovery: https://discovery.etcd.io/#{ENV['ETCD_TOKEN']}
+    discovery: #{etcd_discovery_url}
     # multi-region and multi-cloud deployments need to use $public_ipv4
     addr: $private_ipv4:4001
     peer-addr: $private_ipv4:7001
