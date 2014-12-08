@@ -15,7 +15,6 @@ export OS_FLOATING_IP_POOL=PublicNetwork
 export OS_FLAVOR=m1.small
 export OS_IMAGE=coreos
 export OS_SSH_USERNAME=core
-export ETCD_TOKEN=<token generated at https://discovery.etcd.io/new>
 ```
 
 and then just run vagrant with the [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider)
